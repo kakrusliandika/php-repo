@@ -1,74 +1,75 @@
 # PHP Repo
 
-A modern PHP ecosystem catalog covering frameworks, libraries, tooling, CMS platforms, testing, security, deployment, observability, AI/ML, and legacy packages that should be reviewed before use.
+This README is a practical catalog of PHP dependencies and tools that still make sense to use today.
 
-> Last reviewed: June 20, 2026  
-> Main target: PHP 8.4/8.5, Composer 2.x, actively maintained packages, safe dependency choices, and practical options for new projects.  
-> Note: patch versions change quickly. For the latest patch number, run `composer outdated`, `composer show vendor/package --all`, and check the official release page.
+The goal is simple: instead of keeping only a long list of links, this file explains **what each package is for**, **when to use it**, and **when to avoid it**.
 
-## Status legend
+> Last cleaned up: June 20, 2026  
+> Recommended target for new projects: PHP 8.4 or PHP 8.5, Composer 2.x, active dependencies, and a setup that is easy to maintain.
+
+## How to read this README
+
+- **Do not install every package.** Pick only what your project actually needs.
+- If you use Laravel, start with official Laravel packages and packages that fit Laravel well.
+- If you use Symfony, start with Symfony components.
+- For small projects, keep dependencies small. Fewer dependencies usually mean easier maintenance.
+- For production projects, the minimum baseline should include tests, dependency auditing, logging, and code style rules.
+
+## Status guide
 
 | Status | Meaning |
-|---|---|
-| Recommended | Safe and practical for new projects. |
-| Stable | Still useful, but choose based on your actual project needs. |
-| Advanced | Best for specialized performance or architecture requirements. |
-| Specialized | Good for a specific use case, but not always necessary. |
-| Legacy/Review | Useful for old projects or learning, but do not automatically start new projects with it. |
-| Avoid for new projects | Avoid for new projects; use a modern replacement instead. |
+| --- | --- |
+| Highly recommended | Use it for new projects when the need matches. |
+| Safe to use | Still active and reasonable, but not always required. |
+| Use when needed | Good package, but only for specific cases. |
+| Legacy project only | Keep it if an old project already depends on it, but do not choose it first for new projects. |
+| Avoid for new projects | A healthier, more active, or safer replacement exists. |
 
-## Quick recommendations
+## Quick picks
 
-| Need | Primary choice | Alternative | Notes |
-| --- | --- | --- | --- |
-| New PHP runtime | PHP 8.5 | PHP 8.4 / PHP 8.3 | Use PHP 8.5 for new projects when dependencies are ready; PHP 8.4 remains a safe modern target. |
-| Full-stack web app | Laravel 13 | Symfony 7.4 LTS / Symfony 8.x | Laravel is the fastest route for product delivery; Symfony is excellent for enterprise architecture. |
-| API backend | Laravel 13 + Sanctum/Passport | Symfony + API Platform, Slim 4, Mezzio | Choose based on domain complexity, team skill, and deployment model. |
-| Microservice | Slim 4 | Mezzio, Spiral, Hyperf | Best for webhooks, internal APIs, gateways, and small services. |
-| CMS | WordPress | Drupal, Joomla, Grav, Statamic, October CMS | WordPress is the broadest option; Drupal/Joomla fit structured content and larger portals. |
-| E-commerce | WooCommerce | Magento/Adobe Commerce, Sylius, PrestaShop, Shopware | WooCommerce is fast for small businesses; Sylius/Magento/Shopware are stronger for complex commerce. |
-| Testing | PHPUnit | Pest, Codeception, Behat | PHPUnit remains the standard; Pest is more expressive and concise. |
-| Static analysis | PHPStan | Psalm, Phan | Mandatory for serious long-term PHP codebases. |
-| Code style | Laravel Pint | PHP-CS-Fixer, PHP_CodeSniffer, Easy Coding Standard | Run code style checks in CI. |
-| Security audit | composer audit | Roave Security Advisories | Minimum baseline before deployment. |
-| Async / realtime | Laravel Octane | RoadRunner, Swoole/OpenSwoole, ReactPHP, AMPHP, Workerman | Use only when long-running workers, high concurrency, or realtime flows are required. |
-| AI / LLM | Laravel AI SDK | OpenAI PHP client, LLPhant, PHP-ML, Rubix ML | Fast-moving category; pin versions and check changelogs before production. |
+| Need | Good choice | Simple reason |
+| --- | --- | --- |
+| Fast business app | Laravel 13 | Great for CRUD, dashboards, login, queues, APIs, and fast deployment. |
+| Enterprise application | Symfony 7.4 LTS / 8.x | Good when the project is large, formal, and needs clean architecture. |
+| Small API / webhook | Slim 4 | Lightweight, flexible, and suitable for small services. |
+| General CMS | WordPress | The easiest choice for content, blogs, landing pages, and business websites. |
+| Complex content CMS | Drupal / TYPO3 / Craft CMS | Better when content structure, roles, and editorial workflow are important. |
+| Small to medium e-commerce | WooCommerce | Quick to build, with a very large plugin ecosystem. |
+| Custom e-commerce | Sylius / Shopware / Magento | More serious and heavier, but more flexible for complex commerce requirements. |
+| Testing | PHPUnit + Pest | PHPUnit is the standard; Pest makes tests easier to read. |
+| Code quality | PHPStan + Rector + Pint/PHP-CS-Fixer | This combination pays off quickly in long-term projects. |
+| Security audit | composer audit + Roave Security Advisories | A minimum baseline before production deployment. |
 
-## Popular versions vs latest suitable versions
+## Recommended base versions
 
-| Technology | Modern/latest line | Suggested constraint | Popular/stable line | Notes |
+| Technology | Newest suitable line | Safe/stable line | Still common | Notes |
 | --- | --- | --- | --- | --- |
-| PHP | 8.5 | 8.5.x | 8.4.x / 8.3.x | Recommended runtime target for new projects. |
-| Composer | 2.x | 2.9.x+ | 2.8.x | Required dependency manager for modern PHP. |
-| Laravel | 13.x | ^13.0 | ^12.0 | Laravel 13 requires PHP 8.3+. |
-| Symfony | 8.x / 7.4 LTS | ^8.0 or ^7.4 | 7.4 LTS | Use 7.4 for LTS stability; use 8.x for newest features. |
-| WordPress | 7.x / 6.x | Latest stable | 6.x | Use the latest secure release available from WordPress.org. |
-| Drupal | 11.x | ^11 | ^10 | Strong option for enterprise content modeling. |
-| Joomla | 6.x / 5.x | Latest stable | 5.x | Joomla 6 is the modern line; 5.x remains relevant during migration. |
-| PHPUnit | 12.x / 13.x | ^12.0 or ^13.0 | ^11.5 | Choose based on PHP and framework compatibility. |
-| Pest | 4.x | ^4.0 | ^3.0 | Modern expressive testing layer. |
-| PHPStan | 2.x | ^2.0 | ^1.12 | Primary static analysis choice. |
-| Rector | 2.x | ^2.0 | ^1.0 | Automated upgrades and refactors. |
-| Guzzle | 7.x | ^7.0 | 7.x | Most common PHP HTTP client. |
-| Monolog | 3.x | ^3.0 | ^2.0 | Standard logging library. |
-| Twig | 3.x | ^3.0 | 3.x | Modern template engine. |
+| PHP | 8.5 | 8.4 | 8.3 | For new projects, start with 8.4 or 8.5. Do not start new projects on PHP 7.x. |
+| Composer | 2.10.x | 2.9.x | 2.x | Always use Composer 2.x. It is the center of modern PHP dependency management. |
+| Laravel | 13.x | 12.x | 11.x | For new projects, choose 13.x if your server already supports PHP 8.3+. |
+| Symfony | 8.1 / 8.0 | 7.4 LTS | 6.4 LTS | Choose 7.4 LTS for long-term support; choose 8.x for newer features. |
+| PHPUnit | 12.x / 13.x | 11.x | 10.x | Match the version to your PHP and framework compatibility. |
+| Pest | 4.x | 3.x | 2.x | Good when you want tests that are easier to read. |
+| PHPStan | 2.x | 1.x | - | Use it early so bugs show up before runtime. |
+| Rector | 2.x | 1.x | - | Helps upgrade code without doing everything manually. |
 
-## Recommended stack presets
+## Most practical stacks
 
-### 1. Modern Laravel full-stack / API
+### 1. Laravel for business applications
+
+Use this for dashboards, admin systems, REST APIs, small SaaS products, or internal applications.
 
 ```bash
 composer create-project laravel/laravel app
 cd app
 composer require laravel/sanctum spatie/laravel-permission
 composer require --dev pestphp/pest phpstan/phpstan laravel/pint rector/rector
-php artisan install:api
 composer audit
 ```
 
-Best for SaaS, dashboards, REST APIs, queue workers, AI integrations, and fast business product development.
+### 2. Symfony for larger systems
 
-### 2. Symfony enterprise / large API
+Use this when the project is more formal, modular, and needs enterprise-style structure.
 
 ```bash
 composer create-project symfony/skeleton app
@@ -78,9 +79,9 @@ composer require --dev phpunit/phpunit phpstan/phpstan friendsofphp/php-cs-fixer
 composer audit
 ```
 
-Best for complex domains, modular architecture, enterprise systems, event-driven applications, and API Platform.
+### 3. Slim for small APIs
 
-### 3. Lightweight micro API
+Use this when you only need a small API, webhook, or lightweight service.
 
 ```bash
 mkdir app && cd app
@@ -90,244 +91,287 @@ composer require --dev phpunit/phpunit phpstan/phpstan friendsofphp/php-cs-fixer
 composer audit
 ```
 
-Best for webhooks, small services, internal gateways, lightweight HTTP workers, and fast prototypes.
 
-### 4. Reusable PHP library
+## Core dependencies
 
-```bash
-composer init
-mkdir -p src tests
-composer require psr/log
-composer require --dev phpunit/phpunit phpstan/phpstan friendsofphp/php-cs-fixer rector/rector
-composer dump-autoload
-```
+These are the foundation. Almost every modern PHP project touches at least one of these.
 
-Use PSR-4, semantic versioning, tests, static analysis, and CI from the beginning.
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| PHP | - | The main runtime. | Every PHP project. | Use 8.4/8.5 for new projects. | Highly recommended |
+| Composer | - | Manages dependencies. | Installing packages, autoloading classes, running project scripts. | This is required. Without Composer, modern PHP projects are hard to maintain. | Highly recommended |
+| Packagist | - | The package registry used by Composer. | Finding packages and checking versions. | Also check whether a package is marked as abandoned. | Highly recommended |
+| vlucas/phpdotenv | `composer require vlucas/phpdotenv` | Loads `.env` files. | A non-Laravel project needs configuration from environment variables. | Laravel and Symfony usually already have their own environment handling. | Safe to use |
+| monolog/monolog | `composer require monolog/monolog` | Application logging. | You need error logs, activity logs, or system events. | Many frameworks use Monolog internally. | Highly recommended |
+| psr/log | `composer require psr/log` | A standard logging interface. | You are building a reusable library that should not depend directly on Monolog. | Useful for framework-agnostic packages. | Highly recommended |
+| symfony/console | `composer require symfony/console` | Builds CLI commands. | You need commands such as `php app migrate` or `php app report`. | Very mature and widely used across PHP frameworks. | Highly recommended |
+
+
 
 ## Web and API frameworks
 
-| Name | Package/Repo | Version line | Install | Status | Best for |
+Choose a framework based on project size and team style. Do not choose one only because it is popular.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
 | --- | --- | --- | --- | --- | --- |
-| Laravel | laravel/laravel | 13.x | `composer create-project laravel/laravel app` | Recommended | Full-stack apps, SaaS, dashboards, APIs, queues, AI-ready products. |
-| Symfony | symfony/skeleton / symfony/symfony | 8.x / 7.4 LTS | `composer create-project symfony/skeleton app` | Recommended | Enterprise systems, modular apps, APIs, reusable components. |
-| CodeIgniter 4 | codeigniter4/appstarter | 4.x | `composer create-project codeigniter4/appstarter app` | Stable | Small apps and teams migrating from older CodeIgniter versions. |
-| CakePHP | cakephp/app | 5.x | `composer create-project cakephp/app app` | Stable | Business CRUD apps with strong conventions. |
-| Slim | slim/slim | 4.x | `composer require slim/slim slim/psr7` | Recommended | Micro APIs, webhooks, middleware-based apps. |
-| Mezzio | mezzio/mezzio-skeleton | 3.x | `composer create-project mezzio/mezzio-skeleton app` | Stable | PSR middleware applications and enterprise APIs. |
-| Laminas MVC | laminas/laminas-mvc-skeleton | 3.x | `composer create-project laminas/laminas-mvc-skeleton app` | Stable | Modernized Zend-style enterprise applications. |
-| Spiral | spiral/app | 3.x | `composer create-project spiral/app app` | Advanced | RoadRunner, long-running workers, high-performance services. |
-| Hyperf | hyperf/hyperf-skeleton | 3.x | `composer create-project hyperf/hyperf-skeleton app` | Advanced | Coroutine/Swoole-based high-concurrency services. |
-| Phalcon | phalcon/cphalcon | 5.x | Extension + Composer packages | Specialized | High-performance applications that can support a C extension dependency. |
-| Yii | yiisoft/yii2 / Yii packages | 2.x stable / 3.x ecosystem | `composer create-project yiisoft/yii2-app-basic app` | Review | Yii 2 is mature; review Yii 3 ecosystem readiness before starting new work. |
-| Fat-Free Framework | bcosca/fatfree | 3.x | `composer require bcosca/fatfree-core` | Lightweight | Small and simple PHP applications. |
-| Flight | flightphp/core | 3.x | `composer require flightphp/core` | Lightweight | Small APIs and micro apps. |
-| Nette | nette/application | 3.x | `composer require nette/application` | Stable | Mature framework ecosystem, especially popular in Europe. |
+| laravel/laravel | `composer create-project laravel/laravel app` | A full application framework. | Dashboards, APIs, SaaS apps, admin systems, queues, AI-enabled products. | The most practical default choice for many PHP projects. | Highly recommended |
+| symfony/skeleton | `composer create-project symfony/skeleton app` | A modular application framework. | Enterprise systems, large APIs, complex domains. | More valuable when the project structure is truly large. | Highly recommended |
+| slim/slim | `composer require slim/slim slim/psr7` | A micro framework. | Webhooks, small APIs, internal services. | It does not bring many built-in features, so you assemble the stack yourself. | Highly recommended |
+| codeigniter4/appstarter | `composer create-project codeigniter4/appstarter app` | A lightweight framework. | Small teams, simple apps, migration from older CodeIgniter projects. | Use CodeIgniter 4, not CodeIgniter 3, for new projects. | Safe to use |
+| cakephp/app | `composer create-project cakephp/app app` | A convention-over-configuration framework. | Business CRUD apps that need structure without heavy configuration. | Good if your team likes the convention-based style. | Safe to use |
+| mezzio/mezzio-skeleton | `composer create-project mezzio/mezzio-skeleton app` | A PSR middleware framework. | Enterprise APIs with middleware architecture. | More technical than Laravel or Symfony. | Use when needed |
+| spiral/app | `composer create-project spiral/app app` | A framework for long-running applications. | High-performance services with RoadRunner. | Requires a stronger understanding of worker-based applications. | Use when needed |
+| hyperf/hyperf-skeleton | `composer create-project hyperf/hyperf-skeleton app` | A Swoole/coroutine-based framework. | High-concurrency backend services. | Not needed for normal CRUD applications. | Use when needed |
+| phalcon/cphalcon | Install extension + packages | A C-extension-based framework. | Performance-focused applications that can install PHP extensions. | Setup is more complex than normal PHP frameworks. | Use when needed |
 
-## CMS, blog, wiki, analytics, and e-commerce
 
-| Name | Repo/Package | Version line | Use case | Status |
-| --- | --- | --- | --- | --- |
-| WordPress | wordpress/wordpress-develop | Latest stable | General CMS, blogs, marketing sites | Recommended |
-| WooCommerce | woocommerce/woocommerce | 10.x | WordPress e-commerce | Recommended for small and mid-sized stores |
-| Drupal | drupal/core-recommended | 11.x | Enterprise CMS and structured content | Recommended for complex content |
-| Joomla | joomla/joomla-cms | 6.x / 5.x | General-purpose CMS | Stable |
-| Grav | getgrav/grav | 1.7+ | Flat-file CMS | Recommended for lightweight sites |
-| October CMS | octobercms/october | 3.x / 4.x | Laravel-based CMS | Stable |
-| Statamic | statamic/cms | 5.x | Laravel CMS with flat-file/database options | Recommended |
-| Craft CMS | craftcms/cms | 5.x | Content-first developer-friendly CMS | Strong option |
-| TYPO3 | typo3/cms | 13 LTS | Enterprise CMS | Strong option |
-| Magento / Adobe Commerce | magento/magento2 | 2.4.x | Enterprise e-commerce | Heavy but powerful |
-| Sylius | sylius/sylius | 2.x | Composable/headless commerce | Recommended for custom commerce |
-| PrestaShop | prestashop/prestashop | 9.x / 8.x | Open-source e-commerce | Stable |
-| Shopware | shopware/shopware | 6.x | Modern commerce platform | Strong Symfony ecosystem |
-| OpenCart | opencart/opencart | 4.x | Simple online stores | Stable |
-| Matomo | matomo-org/matomo | 5.x | Self-hosted analytics | Recommended |
-| Nextcloud | nextcloud/server | 31+ / 32+ | Self-hosted cloud collaboration | Recommended |
-| BookStack | BookStackApp/BookStack | 25.x+ | Documentation/wiki platform | Recommended |
-| DokuWiki | splitbrain/dokuwiki | Stable | Database-free wiki | Stable |
-| MediaWiki | wikimedia/mediawiki | 1.43+ / 1.44+ | Large wiki systems | Stable |
-| Mautic | mautic/mautic | 5.x / 6.x | Marketing automation | Specialized |
 
-## HTTP, API, authentication, integrations, and payments
+## Important Laravel packages
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Guzzle | guzzlehttp/guzzle | 7.x | `composer require guzzlehttp/guzzle` | Popular HTTP client. |
-| Symfony HttpClient | symfony/http-client | 7.4 / 8.x | `composer require symfony/http-client` | Modern efficient HTTP client. |
-| Nyholm PSR-7 | nyholm/psr7 | 1.x | `composer require nyholm/psr7` | Lightweight PSR-7 implementation. |
-| API Platform | api-platform/core | 4.x | `composer require api` | REST/GraphQL API platform for Symfony and Laravel. |
-| webonyx/graphql-php | webonyx/graphql-php | 15.x | `composer require webonyx/graphql-php` | GraphQL server library. |
-| swagger-php | zircote/swagger-php | 5.x | `composer require zircote/swagger-php` | OpenAPI generator using annotations/attributes. |
-| NelmioApiDocBundle | nelmio/api-doc-bundle | 5.x | `composer require nelmio/api-doc-bundle` | Symfony API documentation. |
-| Laravel Sanctum | laravel/sanctum | 4.x | `composer require laravel/sanctum` | Lightweight token authentication for Laravel. |
-| Laravel Passport | laravel/passport | 13.x | `composer require laravel/passport` | OAuth2 server for Laravel. |
-| league/oauth2-server | league/oauth2-server | 9.x | `composer require league/oauth2-server` | Framework-agnostic OAuth2 server. |
-| lcobucci/jwt | lcobucci/jwt | 5.x | `composer require lcobucci/jwt` | Strict typed JWT library. |
-| firebase/php-jwt | firebase/php-jwt | 6.x | `composer require firebase/php-jwt` | Simple JWT library. |
-| stripe-php | stripe/stripe-php | 16.x+ | `composer require stripe/stripe-php` | Stripe payments. |
-| twilio-php | twilio/sdk | 8.x | `composer require twilio/sdk` | SMS, voice, and WhatsApp integrations through Twilio. |
-| AWS SDK PHP | aws/aws-sdk-php | 3.x | `composer require aws/aws-sdk-php` | AWS integrations. |
-| Google API Client | google/apiclient | 2.x | `composer require google/apiclient` | Google API integrations. |
-| GitHub API PHP | knplabs/github-api | 3.x | `composer require knplabs/github-api` | GitHub REST API client. |
+These packages are often useful in Laravel projects. Pick what you need; do not install all of them at the start.
 
-## Database, ORM, cache, search, and data models
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| laravel/sanctum | `composer require laravel/sanctum` | Lightweight API and SPA authentication. | Internal APIs, SPAs, simple mobile APIs. | Start with Sanctum before Passport unless OAuth2 is required. | Highly recommended |
+| laravel/passport | `composer require laravel/passport` | OAuth2 server for Laravel. | You need real OAuth2 flows, client credentials, or third-party API access. | Heavier than Sanctum. | Use when needed |
+| laravel/pint | `composer require --dev laravel/pint` | Laravel code formatter. | Every Laravel project. | Run it before committing so style stays consistent. | Highly recommended |
+| laravel/octane | `composer require laravel/octane` | Runs Laravel faster using long-running workers. | High traffic or response time matters. | Be careful with shared state because the process is long-running. | Use when needed |
+| laravel/horizon | `composer require laravel/horizon` | Redis queue dashboard. | Laravel projects with many queued jobs. | Very helpful for monitoring failed jobs and queue load. | Safe to use |
+| laravel/telescope | `composer require laravel/telescope --dev` | Debug panel for requests, queries, jobs, and logs. | Development and staging. | Do not casually enable it in production. | Safe to use |
+| laravel/dusk | `composer require --dev laravel/dusk` | Browser testing. | You need to test UI flows such as login or checkout. | Slower than unit tests, so use it for important flows only. | Use when needed |
+| laravel/socialite | `composer require laravel/socialite` | Login through Google, GitHub, and other providers. | You need social OAuth login. | Still validate emails and user mapping carefully. | Safe to use |
+| laravel/scout | `composer require laravel/scout` | Search abstraction. | You need search through Meilisearch, Algolia, or database drivers. | Do not use it if basic database search is enough. | Use when needed |
+| laravel/reverb | `composer require laravel/reverb` | Laravel-native WebSocket realtime server. | Chat, realtime notifications, live dashboards. | Only use it if realtime features are actually needed. | Use when needed |
+| spatie/laravel-permission | `composer require spatie/laravel-permission` | Roles and permissions. | Admin panels, multi-role users, feature-level access control. | Mature and widely used. | Highly recommended |
+| spatie/laravel-medialibrary | `composer require spatie/laravel-medialibrary` | File and media management. | Products with images, documents, avatars, or galleries. | Cleaner than building file relations from scratch. | Safe to use |
+| spatie/laravel-backup | `composer require spatie/laravel-backup` | File and database backups. | Apps that need automated backups. | Store backups somewhere else, not only on the same server. | Safe to use |
+| spatie/laravel-activitylog | `composer require spatie/laravel-activitylog` | Activity logging for users and models. | You need audit history for data changes. | Useful for admin panels and internal systems. | Safe to use |
+| maatwebsite/excel | `composer require maatwebsite/excel` | Excel import/export. | Reports, bulk uploads, Excel templates. | For large files, pay attention to memory and queues. | Safe to use |
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Eloquent ORM | illuminate/database | 13.x | `composer require illuminate/database` | Standalone Laravel ORM. |
-| Doctrine ORM | doctrine/orm | 3.x | `composer require doctrine/orm` | Enterprise ORM for complex domains. |
-| Doctrine DBAL | doctrine/dbal | 4.x | `composer require doctrine/dbal` | Database abstraction layer. |
-| Cycle ORM | cycle/orm | 2.x | `composer require cycle/orm` | Modern schema-based ORM. |
-| Propel | propel/propel | 2.x | `composer require propel/propel` | Alternative ORM. |
-| Phinx | robmorgan/phinx | 0.16+ | `composer require robmorgan/phinx` | Database migrations. |
-| Predis | predis/predis | 3.x | `composer require predis/predis` | Redis client written in PHP. |
-| ext-redis | phpredis | 6.x | PECL | High-performance Redis extension. |
-| Elasticsearch PHP | elasticsearch/elasticsearch | 8.x | `composer require elasticsearch/elasticsearch` | Official Elasticsearch client. |
-| Elastica | ruflin/elastica | 8.x | `composer require ruflin/elastica` | Elasticsearch abstraction layer. |
-| Meilisearch PHP | meilisearch/meilisearch-php | 1.x | `composer require meilisearch/meilisearch-php` | Modern search engine client. |
-| TNTSearch | teamtnt/tntsearch | 2.x | `composer require teamtnt/tntsearch` | Full-text search in PHP. |
-| league/csv | league/csv | 9.x | `composer require league/csv` | CSV reader/writer. |
-| moneyphp/money | moneyphp/money | 4.x | `composer require moneyphp/money` | Money value objects. |
-| ramsey/uuid | ramsey/uuid | 4.x | `composer require ramsey/uuid` | UUID generation. |
-| symfony/uid | symfony/uid | 7.4 / 8.x | `composer require symfony/uid` | UUID/ULID utilities. |
 
-## Testing, quality assurance, static analysis, and refactoring
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| PHPUnit | phpunit/phpunit | 12.x / 13.x | `composer require --dev phpunit/phpunit` | Standard unit testing framework. |
-| Pest | pestphp/pest | 4.x | `composer require --dev pestphp/pest` | Modern expressive testing layer. |
-| Codeception | codeception/codeception | 5.x | `composer require --dev codeception/codeception` | Acceptance and functional testing. |
-| Behat | behat/behat | 3.x | `composer require --dev behat/behat` | BDD testing. |
-| Mockery | mockery/mockery | 1.x | `composer require --dev mockery/mockery` | Mock objects. |
-| PHPStan | phpstan/phpstan | 2.x | `composer require --dev phpstan/phpstan` | Primary static analysis tool. |
-| Psalm | vimeo/psalm | 6.x | `composer require --dev vimeo/psalm` | Alternative static analysis tool. |
-| Phan | phan/phan | 5.x | `composer require --dev phan/phan` | Static analyzer. |
-| Rector | rector/rector | 2.x | `composer require --dev rector/rector` | Automated refactoring and upgrades. |
-| PHP-CS-Fixer | friendsofphp/php-cs-fixer | 3.x | `composer require --dev friendsofphp/php-cs-fixer` | Code style fixer. |
-| PHP_CodeSniffer | squizlabs/php_codesniffer | 3.x / 4.x | `composer require --dev squizlabs/php_codesniffer` | Code style checker. |
-| Laravel Pint | laravel/pint | 1.x | `composer require --dev laravel/pint` | Laravel-focused formatter. |
-| Infection | infection/infection | 0.29+ | `composer require --dev infection/infection` | Mutation testing. |
-| Deptrac | qossmic/deptrac | 2.x | `composer require --dev qossmic/deptrac` | Architecture dependency checker. |
-| GrumPHP | phpro/grumphp | 2.x | `composer require --dev phpro/grumphp` | Pre-commit quality gate. |
-| PhpMetrics | phpmetrics/phpmetrics | 3.x | `composer require --dev phpmetrics/phpmetrics` | Code metrics. |
+## Important Symfony components
 
-## Files, storage, images, PDF, spreadsheets, and media
+Symfony is strong because its components can be used one by one. These are the most commonly useful ones.
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Flysystem | league/flysystem | 3.x | `composer require league/flysystem` | Filesystem abstraction. |
-| Intervention Image | intervention/image | 3.x | `composer require intervention/image` | Image manipulation. |
-| Imagine | imagine/imagine | 1.x | `composer require imagine/imagine` | Alternative image manipulation library. |
-| Dompdf | dompdf/dompdf | 3.x | `composer require dompdf/dompdf` | HTML to PDF conversion. |
-| mPDF | mpdf/mpdf | 8.x | `composer require mpdf/mpdf` | UTF-8 HTML to PDF generation. |
-| TCPDF | tecnickcom/tcpdf | 6.x | `composer require tecnickcom/tcpdf` | Classic PDF and barcode generation. |
-| Browsershot | spatie/browsershot | 4.x | `composer require spatie/browsershot` | Screenshot/PDF generation through a browser engine. |
-| PhpSpreadsheet | phpoffice/phpspreadsheet | 2.x / 3.x / 4.x | `composer require phpoffice/phpspreadsheet` | Modern spreadsheet library; replacement for PHPExcel. |
-| PHPWord | phpoffice/phpword | 1.x | `composer require phpoffice/phpword` | Word document generation and reading. |
-| Laravel Excel | maatwebsite/excel | 3.x | `composer require maatwebsite/excel` | Excel import/export for Laravel. |
-| Spatie Media Library | spatie/laravel-medialibrary | 11.x | `composer require spatie/laravel-medialibrary` | Media management for Laravel. |
-| PHP-FFMpeg | php-ffmpeg/php-ffmpeg | 1.x | `composer require php-ffmpeg/php-ffmpeg` | Video/audio processing wrapper. |
-| Endroid QR Code | endroid/qr-code | 5.x | `composer require endroid/qr-code` | QR code generation. |
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| symfony/http-client | `composer require symfony/http-client` | HTTP client. | Calling APIs from other services. | A strong alternative to Guzzle. | Highly recommended |
+| symfony/mailer | `composer require symfony/mailer` | Sends email. | Transactional email, notifications, password resets. | Modern replacement for SwiftMailer. | Highly recommended |
+| symfony/validator | `composer require symfony/validator` | Data validation. | Forms, DTOs, API requests. | Great for clean and reusable validation rules. | Highly recommended |
+| symfony/serializer | `composer require symfony/serializer` | Converts objects to arrays/JSON and back. | APIs, DTOs, imports, exports. | Keep data structures disciplined so this does not become confusing. | Safe to use |
+| symfony/security-bundle | `composer require symfony/security-bundle` | Authentication and authorization. | Symfony apps with login and role-based access. | Powerful, but configuration must be understood. | Highly recommended |
+| symfony/messenger | `composer require symfony/messenger` | Queue and message bus. | Async jobs, events, worker integrations. | Good when the application starts getting complex. | Safe to use |
+| symfony/twig-bundle | `composer require symfony/twig-bundle` | Template rendering. | Server-rendered applications. | Twig is mature, safe, and pleasant for templates. | Safe to use |
+| api-platform/core | `composer require api` | Builds APIs quickly with REST/GraphQL. | Resource/model-driven data APIs. | Powerful, but learn the concept first so it does not feel like magic. | Use when needed |
+| easycorp/easyadmin-bundle | `composer require easycorp/easyadmin-bundle` | Symfony admin panel. | You need quick CRUD administration. | Great for internal back-office tools. | Safe to use |
 
-## Mail, notifications, queues, async, and realtime
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Symfony Mailer | symfony/mailer | 7.4 / 8.x | `composer require symfony/mailer` | Modern mailer. |
-| PHPMailer | phpmailer/phpmailer | 6.x | `composer require phpmailer/phpmailer` | Classic stable email library. |
-| Laravel Notifications | laravel/framework | 13.x | Built-in | Multi-channel notifications. |
-| Pusher PHP Server | pusher/pusher-php-server | 7.x | `composer require pusher/pusher-php-server` | Realtime broadcasting. |
-| Ratchet | cboden/ratchet | 0.4.x | `composer require cboden/ratchet` | Classic WebSocket server. |
-| ReactPHP | react/event-loop | 1.x | `composer require react/event-loop` | Event loop for async PHP. |
-| AMPHP | amphp/amp | 3.x | `composer require amphp/amp` | Modern async PHP framework. |
-| OpenSwoole/Swoole | openswoole/core / ext-swoole | 22.x / 5.x+ | PECL + Composer | High-concurrency server runtime. |
-| Workerman | workerman/workerman | 5.x | `composer require workerman/workerman` | Simple async server. |
-| RoadRunner | spiral/roadrunner | 2025.x | Binary + Composer | PHP application server. |
-| Laravel Octane | laravel/octane | 2.x | `composer require laravel/octane` | High-performance Laravel server. |
-| php-amqplib | php-amqplib/php-amqplib | 3.x | `composer require php-amqplib/php-amqplib` | RabbitMQ/AMQP client. |
-| Pheanstalk | pda/pheanstalk | 7.x / 8.x | `composer require pda/pheanstalk` | Beanstalkd queue client. |
 
-## Security and dependency auditing
+## Database, cache, search, and IDs
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| composer audit | Composer built-in | 2.x | `composer audit` | Dependency vulnerability audit. |
-| Roave Security Advisories | roave/security-advisories | dev-latest | `composer require --dev roave/security-advisories:dev-latest` | Blocks vulnerable packages during install/update. |
-| Symfony Security Bundle | symfony/security-bundle | 7.4 / 8.x | `composer require symfony/security-bundle` | Symfony security stack. |
-| spatie/laravel-permission | spatie/laravel-permission | 6.x | `composer require spatie/laravel-permission` | Roles and permissions for Laravel. |
-| Bouncer | silber/bouncer | 1.x | `composer require silber/bouncer` | Roles and abilities for Eloquent. |
-| Defuse Encryption | defuse/php-encryption | 2.x | `composer require defuse/php-encryption` | Application-level encryption. |
-| phpseclib | phpseclib/phpseclib | 3.x | `composer require phpseclib/phpseclib` | Pure PHP SSH/SFTP/crypto utilities. |
-| HTML Purifier | ezyang/htmlpurifier | 4.x | `composer require ezyang/htmlpurifier` | HTML sanitization. |
-| Google Authenticator | phpgangsta/googleauthenticator | Legacy/review | `composer require phpgangsta/googleauthenticator` | 2FA helper; review modern alternatives before production. |
-| iniscan | psecio/iniscan | 0.x/1.x | `composer require --dev psecio/iniscan` | php.ini security scan. |
+This section helps manage data. Choose based on data size, query needs, and operational complexity.
 
-## Data, fake data, safe scraping, parsers, and utilities
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| illuminate/database | `composer require illuminate/database` | Standalone Eloquent ORM. | You want Eloquent without full Laravel. | Nice for small to mid-sized projects that already like Eloquent. | Safe to use |
+| doctrine/orm | `composer require doctrine/orm` | Enterprise ORM. | Complex domains, entities, repositories, large relationships. | More formal and requires disciplined mapping. | Highly recommended |
+| doctrine/dbal | `composer require doctrine/dbal` | Database abstraction layer. | Schema operations, database queries, complex migrations. | Used by many frameworks and migration tools. | Highly recommended |
+| robmorgan/phinx | `composer require robmorgan/phinx` | Database migration tool. | Non-framework projects that need migrations. | Simple and practical. | Safe to use |
+| predis/predis | `composer require predis/predis` | Redis client written in PHP. | Cache, queues, rate limiting, sessions. | Easy to install; for high performance, consider ext-redis. | Safe to use |
+| ext-redis | PECL / OS package | Native Redis extension. | High traffic or heavy Redis usage. | Faster, but requires installing an extension on the server. | Highly recommended |
+| elasticsearch/elasticsearch | `composer require elasticsearch/elasticsearch` | Elasticsearch client. | Large search, log search, analytics-style data. | Do not use it if normal database search is enough. | Use when needed |
+| meilisearch/meilisearch-php | `composer require meilisearch/meilisearch-php` | Meilisearch client. | Fast product search for web apps. | Easier than Elasticsearch for many product use cases. | Safe to use |
+| ramsey/uuid | `composer require ramsey/uuid` | Generates UUIDs. | You need unique IDs that are not easy to guess. | Still very common. | Safe to use |
+| symfony/uid | `composer require symfony/uid` | UUID and ULID utilities. | You need modern IDs, especially sortable ULIDs. | A good option when using Symfony components. | Safe to use |
+| moneyphp/money | `composer require moneyphp/money` | Safe money representation. | Payments, invoices, accounting. | Avoid storing money as floats. | Highly recommended |
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| FakerPHP | fakerphp/faker | 1.x | `composer require --dev fakerphp/faker` | Fake data; replacement for fzaninotto/faker. |
-| Symfony DomCrawler | symfony/dom-crawler | 7.4 / 8.x | `composer require symfony/dom-crawler` | HTML/XML crawler. |
-| Symfony BrowserKit | symfony/browser-kit | 7.4 / 8.x | `composer require symfony/browser-kit` | Browser simulation. |
-| Symfony Panther | symfony/panther | 2.x | `composer require --dev symfony/panther` | Browser testing/scraping through Chrome. |
-| PHP-Parser | nikic/php-parser | 5.x | `composer require nikic/php-parser` | PHP AST parser. |
-| league/commonmark | league/commonmark | 2.x | `composer require league/commonmark` | Modern Markdown parser. |
-| Parsedown | erusev/parsedown | 1.x | `composer require erusev/parsedown` | Lightweight Markdown parser; review security and maintenance needs. |
-| Geocoder PHP | geocoder-php/geocoder | 4.x | `composer require geocoder-php/geocoder` | Geocoding abstraction. |
-| Mobile Detect | mobiledetect/mobiledetectlib | 4.x | `composer require mobiledetect/mobiledetectlib` | Device detection; prefer responsive design first. |
-| libphonenumber-for-php | giggsey/libphonenumber-for-php | 8.x | `composer require giggsey/libphonenumber-for-php` | Phone number validation. |
-| SimplePie | simplepie/simplepie | 1.x | `composer require simplepie/simplepie` | RSS/Atom parsing. |
 
-## AI, machine learning, and agent tooling
 
-| Name | Package | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Laravel AI SDK | Laravel AI ecosystem | 13.x | Laravel ecosystem | AI primitives, agents, embeddings, audio, image, and vector search patterns. |
-| OpenAI PHP Client | openai-php/client | 0.x / 1.x | `composer require openai-php/client` | OpenAI API integration; keep API keys in environment variables. |
-| LLPhant | theodo-group/llphant | 0.x/1.x | `composer require theodo-group/llphant` | LLM application and RAG framework for PHP. |
-| PHP-ML | php-ai/php-ml | 0.x | `composer require php-ai/php-ml` | Classic machine learning in PHP. |
-| Rubix ML | rubix/ml | 2.x | `composer require rubix/ml` | More complete classical ML toolkit. |
-| Math PHP | markrogoyski/math-php | 2.x | `composer require markrogoyski/math-php` | Math and statistics utilities. |
+## HTTP, APIs, authentication, and integrations
 
-## DevOps, deployment, observability, debugging, and profiling
+Use these dependencies when your application needs to communicate with other services.
 
-| Name | Package/Tool | Version line | Install | Use case |
-| --- | --- | --- | --- | --- |
-| Deployer | deployer/deployer | 7.x / 8.x | `composer require --dev deployer/deployer` | PHP deployment automation. |
-| Symfony CLI | Binary | Latest | Official installer | Local development and Symfony tooling. |
-| Docker Compose | Binary | v2 | Docker Desktop or package manager | Local app/database/cache stack. |
-| FrankenPHP | Binary/Docker | 1.x+ | Docker image | Modern PHP application server based on Caddy. |
-| RoadRunner | Binary | 2025.x | Binary + config | High-performance PHP workers. |
-| Sentry PHP | sentry/sentry | 4.x | `composer require sentry/sentry` | Error monitoring. |
-| OpenTelemetry PHP | open-telemetry/api | 1.x | `composer require open-telemetry/api` | Tracing and observability. |
-| Monolog | monolog/monolog | 3.x | `composer require monolog/monolog` | Standard logging. |
-| PsySH | psy/psysh | 0.12+ | `composer require --dev psy/psysh` | Modern PHP REPL. |
-| Kint | kint-php/kint | 6.x | `composer require --dev kint-php/kint` | Debug output. |
-| Clockwork | itsgoingd/clockwork | 5.x | `composer require itsgoingd/clockwork` | Development profiling/debugging. |
-| DebugBar | maximebf/debugbar | 1.x | `composer require --dev maximebf/debugbar` | Debug toolbar. |
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| guzzlehttp/guzzle | `composer require guzzlehttp/guzzle` | HTTP client. | Calling third-party REST APIs. | The most common option with many examples. | Highly recommended |
+| nyholm/psr7 | `composer require nyholm/psr7` | PSR-7 implementation. | You need lightweight request/response objects. | Often used with modern HTTP tooling. | Safe to use |
+| league/oauth2-server | `composer require league/oauth2-server` | OAuth2 server. | Building OAuth2 outside Laravel Passport. | Do not use it if simple tokens are enough. | Use when needed |
+| lcobucci/jwt | `composer require lcobucci/jwt` | Strict JWT handling. | You need JWT tokens with clear rules. | A safer serious option than random JWT helpers. | Safe to use |
+| firebase/php-jwt | `composer require firebase/php-jwt` | Simple JWT library. | Lightweight JWT needs. | Make sure algorithm and key configuration are correct. | Safe to use |
+| zircote/swagger-php | `composer require zircote/swagger-php` | Generates OpenAPI specs. | API documentation from attributes/annotations. | Good so the API does not live only in developers' heads. | Safe to use |
+| webonyx/graphql-php | `composer require webonyx/graphql-php` | GraphQL server library. | You need GraphQL in PHP. | Not necessary if REST is already enough. | Use when needed |
+| stripe/stripe-php | `composer require stripe/stripe-php` | Stripe integration. | Card payments or subscriptions through Stripe. | Use webhooks and idempotency correctly. | Highly recommended |
+| twilio/sdk | `composer require twilio/sdk` | Twilio integration. | SMS, voice, or WhatsApp through Twilio. | Check costs and country-specific rules. | Safe to use |
+| aws/aws-sdk-php | `composer require aws/aws-sdk-php` | AWS integration. | S3, SES, SQS, Lambda, and other AWS services. | Use the smallest IAM permission possible. | Highly recommended |
+| google/apiclient | `composer require google/apiclient` | Google API integration. | Drive, Sheets, Calendar, Google OAuth. | OAuth setup and scopes must be clean. | Safe to use |
 
-## Legacy packages and modern replacements
 
-| Legacy package | Status | Modern replacement |
-| --- | --- | --- |
-| fzaninotto/Faker | Abandoned / legacy | fakerphp/faker |
-| PHPOffice/PHPExcel | Deprecated | phpoffice/phpspreadsheet |
-| swiftmailer/swiftmailer | Deprecated | symfony/mailer or phpmailer/phpmailer |
-| silexphp/Silex | End-of-life | Symfony, Slim, Laravel, or Mezzio |
-| bcit-ci/CodeIgniter | CodeIgniter 3 legacy | codeigniter4/appstarter |
-| piwik/piwik | Old project name | Matomo |
-| phacility/phabricator | Not suitable for new projects | GitHub, GitLab, Gitea, or Forgejo |
-| facebookarchive/facebook-php-sdk | Archived | Modern OAuth client or official current SDK |
-| kriswallsmith/assetic | Legacy asset pipeline | Vite, Symfony AssetMapper, or Laravel Vite |
-| FriendsOfPHP/Goutte | Legacy scraping stack | Symfony BrowserKit, DomCrawler, or Panther |
-| tymondesigns/jwt-auth | Requires review | Laravel Sanctum, Passport, or lcobucci/jwt |
-| amazonwebservices/aws-sdk-for-php | Deprecated v1 | aws/aws-sdk-php v3 |
-| PayPal-PHP-SDK | Legacy | Current PayPal checkout/server SDK or modern payment gateway SDK |
-| password_compat | Unnecessary for modern PHP | Built-in password_hash/password_verify |
-| php7cc | Legacy upgrade tool | Rector + PHPStan |
 
-## Modern `composer.json` template
+## Testing and code quality
+
+This section keeps a project healthy. If the project will live for a while, do not skip it.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| phpunit/phpunit | `composer require --dev phpunit/phpunit` | Unit testing. | Any serious project. | Start with small tests for important logic. | Highly recommended |
+| pestphp/pest | `composer require --dev pestphp/pest` | Concise test syntax. | Your team wants more readable tests. | It runs on top of PHPUnit, not as a total replacement. | Highly recommended |
+| codeception/codeception | `composer require --dev codeception/codeception` | Functional and acceptance testing. | You need fuller application flow tests. | Heavier than simple unit tests. | Use when needed |
+| behat/behat | `composer require --dev behat/behat` | BDD testing. | Your team wants business-readable scenarios. | Great when product owners also read test scenarios. | Use when needed |
+| mockery/mockery | `composer require --dev mockery/mockery` | Mock objects. | Testing classes with dependencies. | Do not overuse mocks until tests stop feeling real. | Safe to use |
+| phpstan/phpstan | `composer require --dev phpstan/phpstan` | Static analysis. | Finding bugs without running the app. | Raise levels gradually so the team can adapt. | Highly recommended |
+| vimeo/psalm | `composer require --dev vimeo/psalm` | Alternative static analysis. | You need strong type checking. | Start with PHPStan or Psalm first; you do not always need both. | Safe to use |
+| rector/rector | `composer require --dev rector/rector` | Automated refactoring. | Upgrading PHP/frameworks or cleaning old syntax. | Always review the diff before merging. | Highly recommended |
+| friendsofphp/php-cs-fixer | `composer require --dev friendsofphp/php-cs-fixer` | Code style fixer. | General projects outside Laravel. | Create a config so everyone follows the same style. | Highly recommended |
+| squizlabs/php_codesniffer | `composer require --dev squizlabs/php_codesniffer` | Code standard checker. | You need PSR-12, WordPress standards, or custom rules. | Good for teams that need formal rules. | Safe to use |
+| infection/infection | `composer require --dev infection/infection` | Mutation testing. | Checking whether tests are truly strong. | For mature projects, not the first thing to add. | Use when needed |
+| qossmic/deptrac | `composer require --dev qossmic/deptrac` | Architecture boundary checker. | Large apps where layers must stay clean. | Helps prevent service layers from leaking everywhere. | Use when needed |
+| phpro/grumphp | `composer require --dev phpro/grumphp` | Pre-commit quality gate. | You want tests/style checks before commit. | Do not make hooks too heavy or developers will disable them. | Safe to use |
+
+
+
+## Files, images, PDF, Excel, and media
+
+These packages help when an application works with uploads, reports, documents, or media.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| league/flysystem | `composer require league/flysystem` | Storage abstraction. | Local disk, S3, FTP, or multiple storage backends. | Keeps code from being locked to one storage type. | Highly recommended |
+| intervention/image | `composer require intervention/image` | Image manipulation. | Resize, crop, convert, thumbnails. | Watch memory usage for large images. | Safe to use |
+| imagine/imagine | `composer require imagine/imagine` | Alternative image manipulation. | You need a framework-agnostic image library. | Choose either Imagine or Intervention based on preference. | Safe to use |
+| dompdf/dompdf | `composer require dompdf/dompdf` | HTML to PDF. | Invoices and simple reports. | Complex layouts may need adjustments. | Safe to use |
+| mpdf/mpdf | `composer require mpdf/mpdf` | HTML to PDF with strong UTF-8 support. | PDF documents with international characters. | A bit heavy, but powerful for documents. | Safe to use |
+| tecnickcom/tcpdf | `composer require tecnickcom/tcpdf` | Classic PDF and barcode generation. | Old systems or low-level PDF needs. | The API feels old, but it is still widely used. | Legacy project only |
+| spatie/browsershot | `composer require spatie/browsershot` | Screenshots/PDF through a browser. | You need output that looks like Chrome-rendered HTML. | Requires Node/Chrome on the server. | Use when needed |
+| phpoffice/phpspreadsheet | `composer require phpoffice/phpspreadsheet` | Reads/writes spreadsheets. | Excel, CSV, data reports. | Modern replacement for PHPExcel. | Highly recommended |
+| phpoffice/phpword | `composer require phpoffice/phpword` | Reads/writes Word documents. | Letters, reports, document templates. | Good for simple to medium document generation. | Safe to use |
+| php-ffmpeg/php-ffmpeg | `composer require php-ffmpeg/php-ffmpeg` | FFmpeg wrapper. | Video/audio processing. | Still requires the FFmpeg binary on the server. | Use when needed |
+| endroid/qr-code | `composer require endroid/qr-code` | QR code generation. | Tickets, payments, verification, quick links. | Simple and practical. | Safe to use |
+
+
+
+## CMS, e-commerce, and ready-made platforms
+
+Not every project needs to be built from zero. If the need matches, a ready-made platform can be faster.
+
+| Platform | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| WordPress | Download / hosting installer | The most popular CMS. | Blogs, company profiles, landing pages, content portals. | Do not install too many plugins without auditing them. | Highly recommended |
+| WooCommerce | WordPress plugin | E-commerce on WordPress. | Small businesses, product catalogs, standard checkout flows. | For large commerce, plan serious optimization. | Safe to use |
+| Drupal | Composer project | Enterprise CMS. | Structured content, editorial workflows, large portals. | The learning curve is heavier. | Highly recommended |
+| Joomla | Download / Composer in some setups | General-purpose CMS. | Content websites that need a mature CMS. | Make sure extensions are still maintained. | Safe to use |
+| Grav | Download / Composer | Flat-file CMS. | Lightweight websites without a database. | Good for small documentation and fast sites. | Safe to use |
+| Statamic | `composer require statamic/cms` | Laravel-based CMS. | Modern content projects with a good developer experience. | Check license and project needs. | Safe to use |
+| October CMS | Composer | Laravel-based CMS. | Custom websites that need a developer-friendly CMS. | Check version and license before starting. | Safe to use |
+| Magento / Adobe Commerce | Composer | Enterprise e-commerce. | Large catalogs, multi-store setups, complex commerce needs. | Heavy. Do not use it for a simple small store. | Use when needed |
+| Sylius | Composer | Composable commerce. | Custom/headless commerce. | Requires a team comfortable with Symfony. | Use when needed |
+| PrestaShop | Download / Composer in some setups | Open-source e-commerce. | Standalone online stores. | Review modules and themes carefully. | Safe to use |
+| Shopware | Composer / installer | Modern commerce platform. | Commerce projects that need flexibility and Symfony ecosystem support. | Better when the team is ready to learn the platform. | Use when needed |
+| Matomo | Download / self-hosted | Self-hosted analytics. | You want analytics data without depending fully on Google Analytics. | Requires your own storage and maintenance. | Safe to use |
+| Nextcloud | Download / self-hosted | Self-hosted file collaboration. | Internal file sharing, calendars, contacts. | Requires proper server maintenance. | Safe to use |
+| BookStack | Installer / Git | Internal documentation. | Team wikis, project documentation, SOPs. | Simpler than MediaWiki. | Safe to use |
+
+
+
+## Email, queues, async, and realtime
+
+Use this section when the application starts needing background work or realtime features.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| symfony/mailer | `composer require symfony/mailer` | Sends email. | Transactional email. | Modern and clean choice. | Highly recommended |
+| phpmailer/phpmailer | `composer require phpmailer/phpmailer` | SMTP email sending. | Simple or legacy projects. | Still stable and easy to understand. | Safe to use |
+| pusher/pusher-php-server | `composer require pusher/pusher-php-server` | Realtime broadcasting via Pusher. | Live notifications, realtime dashboards. | Check pricing and usage limits. | Use when needed |
+| cboden/ratchet | `composer require cboden/ratchet` | Classic WebSocket server. | Realtime experiments in PHP. | For modern production, consider Reverb/Swoole/Node depending on stack. | Legacy project only |
+| react/event-loop | `composer require react/event-loop` | Async event loop. | Building async processes in PHP. | Requires a good understanding of async programming. | Use when needed |
+| amphp/amp | `composer require amphp/amp` | Modern async PHP. | Async I/O, crawlers, clients, workers. | Not required for normal CRUD web apps. | Use when needed |
+| workerman/workerman | `composer require workerman/workerman` | Async server. | WebSocket, TCP server, realtime worker. | Make sure the process model is understood. | Use when needed |
+| spiral/roadrunner | Binary + package | PHP application server. | High-performance workers. | Requires long-running process thinking. | Use when needed |
+| php-amqplib/php-amqplib | `composer require php-amqplib/php-amqplib` | RabbitMQ client. | Queues, events, system integration. | Good for message broker architecture. | Safe to use |
+
+
+
+## Security
+
+Security should not be added at the end. At minimum, dependency auditing and input validation should exist early.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| composer audit | `composer audit` | Audits dependency vulnerabilities. | Before deployment and in CI. | Built into Composer, so there is no good reason to skip it. | Highly recommended |
+| roave/security-advisories | `composer require --dev roave/security-advisories:dev-latest` | Prevents installing vulnerable packages. | Projects that want stricter dependency safety. | Sometimes blocks updates because an advisory exists, which is the point. | Highly recommended |
+| symfony/security-bundle | `composer require symfony/security-bundle` | Symfony security stack. | Login, roles, access control. | Powerful, but must be configured correctly. | Highly recommended |
+| defuse/php-encryption | `composer require defuse/php-encryption` | Application-level encryption. | You need to store sensitive encrypted data. | Do not invent your own encryption algorithm. | Safe to use |
+| phpseclib/phpseclib | `composer require phpseclib/phpseclib` | Pure PHP SSH, SFTP, and crypto utilities. | SFTP/SSH automation without special extensions. | Good for file automation and server integrations. | Safe to use |
+| ezyang/htmlpurifier | `composer require ezyang/htmlpurifier` | Cleans user-provided HTML. | Users are allowed to input limited HTML. | Important for preventing XSS. | Highly recommended |
+| psecio/iniscan | `composer require --dev psecio/iniscan` | Scans php.ini security settings. | PHP server hardening audits. | Useful for a security checklist. | Use when needed |
+
+
+
+## Common utilities
+
+These small utilities are often helpful, but still choose only what you need.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| nesbot/carbon | `composer require nesbot/carbon` | Date and time helper. | Comfortable date manipulation. | Widely used in Laravel. | Highly recommended |
+| fakerphp/faker | `composer require --dev fakerphp/faker` | Fake data for testing. | Factories, seeders, dummy data. | Modern replacement for fzaninotto/Faker. | Highly recommended |
+| respect/validation | `composer require respect/validation` | Fluent data validation. | Small projects without a large framework validator. | If you are already in Laravel/Symfony, use the built-in validator first. | Safe to use |
+| league/commonmark | `composer require league/commonmark` | Modern Markdown parser. | Blogs, documentation, Markdown comments. | Recommended over older, less maintained parsers. | Highly recommended |
+| erusev/parsedown | `composer require erusev/parsedown` | Lightweight Markdown parser. | Old projects that already use it. | For new projects, consider league/commonmark. | Legacy project only |
+| nikic/php-parser | `composer require nikic/php-parser` | Parses PHP code into an AST. | Static analysis, refactoring tools, code generation. | Important package in the PHP tooling ecosystem. | Highly recommended |
+| league/csv | `composer require league/csv` | Reads/writes CSV. | CSV imports and exports. | Safer than hand-rolling CSV parsing. | Highly recommended |
+| giggsey/libphonenumber-for-php | `composer require giggsey/libphonenumber-for-php` | Phone number validation. | International phone number forms. | Do not validate phone numbers with a simple regex. | Safe to use |
+| mobiledetect/mobiledetectlib | `composer require mobiledetect/mobiledetectlib` | Device detection. | You need a fallback based on user-agent. | Do not use it as a replacement for responsive design. | Use when needed |
+
+
+
+## AI and machine learning
+
+PHP can be used for AI integration. For heavy ML training, Python is usually still the better fit.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| openai-php/client | `composer require openai-php/client` | OpenAI API client. | Chat, embeddings, summarization, simple agents. | Keep API keys in `.env`, never commit them. | Use when needed |
+| theodo-group/llphant | `composer require theodo-group/llphant` | LLM/RAG framework for PHP. | Document search, chatbots, embeddings experiments. | AI tooling changes quickly, so check updates before production. | Use when needed |
+| php-ai/php-ml | `composer require php-ai/php-ml` | Classic machine learning. | Learning ML, simple classification, small data experiments. | Not a replacement for Python ML stacks for heavy training. | Use when needed |
+| rubix/ml | `composer require rubix/ml` | Larger classical ML toolkit. | Classical ML experiments in PHP. | Still evaluate performance and data requirements carefully. | Use when needed |
+| markrogoyski/math-php | `composer require markrogoyski/math-php` | Math and statistics utilities. | Statistics, numeric operations, light analysis. | Useful utility package, not a full ML framework. | Safe to use |
+
+
+
+## DevOps, observability, and debugging
+
+This section helps make a project easier to monitor, debug, and deploy.
+
+| Dependency | Install | What it does | Use it when | Notes | Status |
+| --- | --- | --- | --- | --- | --- |
+| deployer/deployer | `composer require --dev deployer/deployer` | Deployment automation. | Deploying to VPS or your own servers. | Good for small teams without a larger deployment platform. | Safe to use |
+| sentry/sentry | `composer require sentry/sentry` | Error monitoring. | Production needs fast error visibility. | Do not rely only on server logs. | Highly recommended |
+| open-telemetry/api | `composer require open-telemetry/api` | Tracing and observability. | Microservices or already-complex systems. | Not required for small applications. | Use when needed |
+| psy/psysh | `composer require --dev psy/psysh` | PHP REPL. | Debugging and experimenting with code. | Comfortable for development. | Safe to use |
+| kint-php/kint | `composer require --dev kint-php/kint` | Readable debug output. | Local development. | Do not show debug dumps in production. | Safe to use |
+| itsgoingd/clockwork | `composer require itsgoingd/clockwork` | Web app profiling/debugging. | Inspecting queries, requests, and timelines. | Useful for finding bottlenecks. | Safe to use |
+
+
+## Old packages and modern replacements
+
+This part matters because the original README contained many packages that were once popular but are no longer a good first choice for new projects.
+
+| Old package | Problem | Replacement | Simple note |
+| --- | --- | --- | --- |
+| fzaninotto/Faker | No longer the main choice. | fakerphp/faker | Use FakerPHP directly for new projects. |
+| PHPOffice/PHPExcel | Deprecated. | phpoffice/phpspreadsheet | Do not use PHPExcel for new projects. |
+| swiftmailer/swiftmailer | Deprecated. | symfony/mailer or phpmailer/phpmailer | SwiftMailer has been replaced by Symfony Mailer. |
+| silexphp/Silex | End-of-life. | Symfony, Slim, Laravel, or Mezzio | Silex is useful only when reading old projects. |
+| bcit-ci/CodeIgniter | CodeIgniter 3 legacy. | codeigniter4/appstarter | Use CodeIgniter 4 for new projects. |
+| piwik/piwik | Old project name. | Matomo | Piwik is now known as Matomo. |
+| facebookarchive/facebook-php-sdk | Archived. | Modern OAuth client or current official SDK | Do not start new integrations from an archived SDK. |
+| kriswallsmith/assetic | Old asset pipeline. | Vite, Laravel Vite, Symfony AssetMapper | Modern frontend work is usually easier with Vite. |
+| FriendsOfPHP/Goutte | Old scraping stack. | Symfony BrowserKit, DomCrawler, or Panther | May appear in old projects, but is not the first choice now. |
+| password_compat | Not needed in modern PHP. | Built-in password_hash/password_verify | Modern PHP already has password APIs. |
+| php7cc | Old upgrade tool. | Rector + PHPStan | For modern upgrades, Rector is more relevant. |
+
+## Clean `composer.json` template
 
 ```json
 {
@@ -360,47 +404,45 @@ Use PSR-4, semantic versioning, tests, static analysis, and CI from the beginnin
 }
 ```
 
-## Package selection checklist
+## Checklist before adding a dependency
 
-1. Check maintenance status on GitHub and Packagist.
-2. Prefer packages that support PHP 8.4/8.5 for new projects.
-3. Avoid archived, abandoned, or security-unpatched dependencies.
-4. Run `composer audit` before deployment.
-5. Use clear version constraints such as `^13.0`, `^8.0`, `^7.4`, or `^3.0`.
-6. Add tests, static analysis, formatting, and dependency auditing to CI.
-7. Never store secrets in the repository; use `.env`, CI secrets, or a secrets manager.
-8. For long-term products, prefer LTS lines or projects with clear support policies.
-9. For public APIs, include rate limiting, validation, authentication, logging, monitoring, and OpenAPI documentation.
-10. For AI/LLM packages, separate the provider layer so models and vendors can be changed later.
+1. Check whether the package is still maintained on GitHub or Packagist.
+2. Check whether it supports the PHP version used by your project.
+3. Read the package README, especially installation and configuration.
+4. Check open issues. If many important issues are ignored, be careful.
+5. Run `composer audit`.
+6. Do not use a package only because it is trending.
+7. Do not install a large dependency for a small problem.
+8. If the framework already has a built-in feature, try the built-in feature first.
+9. Store secrets in `.env` or a secret manager, not in the repository.
+10. Write down why the dependency is being used.
 
-## Recommended learning and build order
+## Practical learning order
 
-1. PHP 8.4/8.5, Composer, PSR-4, PSR-12, error handling, typed properties, and attributes.
-2. Laravel 13 for full-stack apps, APIs, queues, and productivity.
-3. Symfony 7.4 LTS/8.x for enterprise components and modular architecture.
-4. PHPUnit/Pest, PHPStan, Rector, PHP-CS-Fixer/Pint.
-5. Security: composer audit, authentication, authorization, validation, encryption, and rate limiting.
-6. Database work: migrations, ORM, transactions, indexing, caching, and queues.
-7. Deployment: Docker, PHP-FPM/FrankenPHP/RoadRunner, schedulers, workers, and logs.
-8. Observability: Monolog, Sentry, OpenTelemetry.
-9. AI integration: embeddings, vector search, queue-based LLM jobs, and provider abstraction.
+1. Modern PHP: types, classes, namespaces, error handling, Composer.
+2. Web basics: routing, request, response, sessions, cookies.
+3. Database: queries, migrations, transactions, indexing.
+4. Laravel or Symfony. Pick one first.
+5. Testing with PHPUnit or Pest.
+6. PHPStan to catch bugs early.
+7. Rector to upgrade code.
+8. Basic security: input validation, CSRF, XSS, password hashing, rate limiting.
+9. Deployment: Docker, PHP-FPM/FrankenPHP, queue workers, schedulers.
+10. Observability: logs, error monitoring, tracing.
 
-## Primary version sources
+## Main sources for version checks
 
 | Source | URL |
 | --- | --- |
 | PHP supported versions | https://www.php.net/supported-versions.php |
-| Laravel release notes | https://laravel.com/docs/releases |
+| Laravel release notes | https://laravel.com/docs/13.x/releases |
 | Symfony releases | https://symfony.com/releases |
 | Composer download | https://getcomposer.org/download/ |
 | Packagist | https://packagist.org/ |
-| WordPress releases | https://wordpress.org/download/releases/ |
-| Drupal core releases | https://www.drupal.org/project/drupal/releases |
-| Joomla downloads | https://downloads.joomla.org/latest |
 
-## Appendix A — Legacy reference backlog from the original README
+## Appendix: references from the old README
 
-This appendix preserves references from the original list so they are not lost. Not every item below is recommended for new projects. Use the curated categories above first, then review each legacy item before adopting it.
+The old list is preserved as a reference, but not everything here is recommended. Treat this section as a backlog to curate later, not as an install list.
 
 - [laravel/laravel](https://github.com/laravel/laravel)
 - [symfony/symfony](https://github.com/symfony/symfony)
@@ -1892,15 +1934,15 @@ This appendix preserves references from the original list so they are not lost. 
 - [arshaw/phpti](https://github.com/arshaw/phpti)
 - [silverstripe/silverstripe-framework](https://github.com/silverstripe/silverstripe-framework)
 
-## Appendix B — Security training only
+## Appendix: security learning only
 
-The following entries are suitable only for local labs, security education, or CTF-style practice. Do not deploy them to public servers.
+The following item is suitable only for local labs or security practice. Do not deploy it to a public server.
 
 - ethicalhack3r/DVWA
 
-## Appendix C — Excluded from recommendations
+## Entries not recommended
 
-Some original entries pointed to backdoors, webshells, private APIs, or other high-risk material. To keep this README safe and production-oriented, those entries are not linked or recommended.
+Some entries from the old list point to backdoors, webshells, private APIs, or high-risk material. To keep this README safe and production-oriented, those items are not linked in the recommendation sections.
 
 - mgp25/Instagram-API — not recommended for application projects.
 - owner888/phpspider — not recommended for application projects.
@@ -1909,9 +1951,19 @@ Some original entries pointed to backdoors, webshells, private APIs, or other hi
 - nbs-system/php-malware-finder — not recommended for application projects.
 - mgp25/SC-API — not recommended for application projects.
 
-## Maintenance notes
+## README maintenance notes
 
-- Review this README at least every three months.
-- Recheck major releases for PHP, Laravel, Symfony, WordPress, Drupal, Joomla, PHPUnit, Pest, PHPStan, Rector, and Composer.
-- When adding a new item, prefer this format: `Name | Package | Version line | Install | Use case | Status`.
-- If a package becomes abandoned, archived, or security-risky, move it to the legacy/migration section.
+Review this README at least every three months.
+
+Things to recheck:
+- supported PHP versions;
+- latest Laravel and Symfony versions;
+- packages that became abandoned;
+- packages with security advisories;
+- dependencies that have been replaced by built-in framework features.
+
+When adding a new package, use this simple pattern:
+
+```md
+| Dependency | Install | What it does | Use it when | Notes | Status |
+```
